@@ -1,21 +1,39 @@
 import {NextFunction, Request, Response} from 'express';
 import FormData from 'form-data';
 import https from 'https';
+import fs from 'fs';
+import path from 'path';
 
 // Make sure to set the OPENAI_API_KEY environment variable in a .env file (create if does not exist) - see .env.example
 
 export class OpenAI {
+
+  private static systemPrompt: string | null = null;
+  private static getSystemPrompt(): string {
+    if (!this.systemPrompt) {
+      const promptPath = path.join(__dirname, '../prompts/system.md');
+      this.systemPrompt = fs.readFileSync(promptPath, 'utf8');
+    }
+    return this.systemPrompt;
+  }
   private static createChatBody(body: Request['body'], stream?: boolean) {
     // Text messages are stored inside request body using the Deep Chat JSON format:
     // https://deepchat.dev/docs/connect
-    const chatBody = {
-      messages: body.messages.map((message: {role: string; text: string}) => {
-        return {role: message.role === 'ai' ? 'assistant' : message.role, content: message.text};
-      }),
-      model: body.model,
-    } as {stream?: boolean};
-    if (stream) chatBody.stream = true;
-    return chatBody;
+    const systemPrompt = {
+      role: 'system',
+      content: this.getSystemPrompt()
+    };
+    const userMessages = body.messages.map((message: {role: string; text: string}) => {
+    return {role: message.role === 'ai' ? 'assistant' : message.role, content: message.text};
+  });
+
+  const chatBody = {
+    messages: [systemPrompt, ...userMessages], // Add system prompt as first message
+    model: body.model,
+  } as {stream?: boolean};
+
+  if (stream) chatBody.stream = true;
+  return chatBody;
   }
 
   public static async chat(body: Request['body'], res: Response, next: NextFunction) {
