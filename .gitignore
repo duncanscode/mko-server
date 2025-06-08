@@ -1,0 +1,12 @@
+# Environment variables
+.env
+.env.local
+.env.production
+.env.staging
+
+# Common exclusions
+node_modules/
+dist/
+build/
+*.log
+.DS_Store
