@@ -17,6 +17,9 @@
     "ecosystem.config.js"
   ],
   "include": [
-        "src/**/*.md"
+      "src/**/*.ts",    // All TypeScript files
+      "src/**/*.js",    // All JavaScript files (since you have allowJs: true)
+      "src/**/*.json",
+      "src/**/*.md"
   ]
 }
