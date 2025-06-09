@@ -38,6 +38,9 @@ export class OpenAI {
 
   public static async chat(body: Request['body'], res: Response, next: NextFunction) {
     const chatBody = OpenAI.createChatBody(body);
+
+    console.log('Sending to OpenAI:', JSON.stringify(chatBody, null, 2));
+
     const req = https.request(
       'https://api.openai.com/v1/chat/completions',
       {
