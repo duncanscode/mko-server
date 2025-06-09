@@ -15,5 +15,8 @@
     "node_modules",
     "build",
     "ecosystem.config.js"
+  ],
+  "include": [
+        "src/**/*.md"
   ]
 }
