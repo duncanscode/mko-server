@@ -11,7 +11,7 @@ export class OpenAI {
   private static systemPrompt: string | null = null;
   private static getSystemPrompt(): string {
     if (!this.systemPrompt) {
-      const promptPath = path.join(__dirname, '../prompts/quiz.md');
+      const promptPath = path.join(__dirname, '../prompts/system.md');
       this.systemPrompt = fs.readFileSync(promptPath, 'utf8');
     }
     return this.systemPrompt;
